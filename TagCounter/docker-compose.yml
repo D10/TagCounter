@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+   redis:
+     image: redis
+     restart: always
+     container_name: 'app_redis'
+     command: redis-server
+     ports:
+       - '6379:6379'
+   web:
+       build: .
+       command: python manage.py runserver 127.0.0.2:8000
+       ports:
+           - '8000:8000'
+   celery:
+     build: .
+     container_name: 'app_celery'
+     command: celery -A TagCounter worker -l info
+     volumes:
+       - .:/code
+     links:
+       - redis
+     depends_on:
+       - web
+       - redis
