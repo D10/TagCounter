@@ -15,7 +15,7 @@ services:
    celery:
      build: .
      container_name: 'app_celery'
-     command: celery -A TagCounter worker -l info
+     command: celery -A TagCounter --pool=solo -l info
      volumes:
        - .:/code
      links:
